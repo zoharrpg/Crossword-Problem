@@ -568,7 +568,7 @@ public static void Print()
                    System.out.print(rowword[i].charAt(j)+" ");
                }
 
-               System.out.println(" ");
+               System.out.println();
            }
 
        }
