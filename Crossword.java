@@ -50,32 +50,8 @@ public class Crossword
             System.out.println("Board does noe exist.Try another file");
             System.exit(0);
         }
+        line = testfile.nextInt();
         
-       // read the dictionary 
-
-       alphabet=new char[26];
-
-       for(int i=0;i<26;i++)
-       alphabet[i]=(char)(97+i);
-       //get 26 character;
-       
-       
-        D = new MyDictionary();
-
-        while(dictionary.hasNext())
-        {
-            word=dictionary.nextLine();
-            
-            D.add(word);
-        }//  input the dictionary, which makes D is the dictionary 
-
-        dictionary.close();
-        
-
-        
-        
-          line = testfile.nextInt();
-
         Board =new char [line][line];
 
         for(int i=0; i<line;i++)
@@ -90,6 +66,64 @@ public class Crossword
             }
 
         }
+        
+       // read the dictionary 
+
+       alphabet=new char[26];
+
+       for(int i=0;i<26;i++)
+       alphabet[i]=(char)(97+i);
+       //get 26 character;
+
+       boolean type=false;
+
+       for(int i=0; i<line;i++)
+        {
+            for(int j=0; j<line; j++)
+            {
+                if(Board[i][j]=='-')
+                {
+                type=true;
+                break;
+                }
+                
+                
+              
+              
+            }
+
+        }
+
+
+       
+       
+        D = new MyDictionary();
+
+        while(dictionary.hasNext())
+        {
+            
+            word=dictionary.nextLine();
+            if(type)
+            {
+                if(word.length()<=line)
+                D.add(word);
+            }
+            else
+            {
+                if(word.length()==line)
+                D.add(word);
+
+            }
+        }//  input the dictionary, which makes D is the dictionary 
+
+        dictionary.close();
+        
+
+        
+        
+          
+
+       
        // print(Board);
         //read board
 
@@ -225,7 +259,7 @@ public class Crossword
 
     case 2:
     
-    if(isOk(row,col))
+    if(isOk(row,col)&&endpoint)
        { 
         
         StringBuilder word1=new StringBuilder();
@@ -243,14 +277,16 @@ public class Crossword
             
         if(colword[col].length()!=0)
        colword[col].delete(0,colword[col].length());
+
+      
         
     
         
        
        if(col<line-1)
-       {
+      {
            solve(row,col+1);
-       }
+      }
        else if(row<line)
        {
            solve(row+1,0);
@@ -295,10 +331,35 @@ public static boolean valid(int row,int col)
 
 
 public static boolean isOk(int row,int col)
-{
+{    
+    
+    
+    
     int choice1=D.searchPrefix(rowword[row]);
     
     int choice2=D.searchPrefix(colword[col]);
+    
+     
+    if(row>0&&col>0)
+    {
+    if(Board[row-1][col]=='-'&&Board[row][col-1]!='-')
+    {
+        if(choice1==3||choice1==2)
+        return true;    
+    }
+    else if(Board[row][col-1]=='-'&&Board[row+1][col]!='-')
+    {
+        if(choice2==3||choice2==2)
+        return true;
+
+    }
+    else if(Board[row][col-1]=='-'&&Board[row+1][col]=='-')
+    {
+        return true;
+    }
+        
+    
+}
 
    if(row==0&&col<line)
     {
