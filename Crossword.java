@@ -423,39 +423,11 @@ public static boolean isValid(int row, int col,char w)
 
         if(row==line-1&&col==line-1)
             {
-                if(Character.isLowerCase(Board[row][col]))
-                {
-                    if((choice1==3||choice1==2)&&(choice2==3||choice2==2))
-                    {
-                        endpoint=false;
-                        return true;
-
-                    }
-
-                    
-                      return false;
-    
-                }
-                else if(Character.isLowerCase(Board[row-1][col])||Character.isLowerCase(Board[row][col-1]))
-                {
-                    if((choice1==3||choice1==2)&&(choice2==3||choice2==2))
-                    {
-                    endpoint=false;
-                        return true;
-                    }
-                    else
-                    {
-                       
-                       return false;
-                        
-
-                    }
-                    
-                }
-                else if(Board[row][col]=='-')
+                
+                if(Board[row][col]=='-')
                   {
                       endpoint=false;
-                      return false;
+                      return true;
                   }
                 else if((choice1==3||choice1==2)&&(choice2==3||choice2==2))
                 {
