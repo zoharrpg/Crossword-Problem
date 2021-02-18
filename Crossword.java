@@ -276,6 +276,9 @@ public class Crossword
        
         rowword[row].append('-');
         colword[col].append('-');
+
+        int prerow=rowIndex[row];
+        int precol=colIndex[col];
         
         rowIndex[row]=col;
         
@@ -300,9 +303,9 @@ public class Crossword
         if(colword[col].length()!=0)
           colword[col].deleteCharAt(colword[col].length()-1);
 
-        rowIndex[row]=-1;
+        rowIndex[row]=prerow;
         
-        colIndex[col]=-1;
+        colIndex[col]=precol;
 
        
 
@@ -328,14 +331,37 @@ public class Crossword
     public static boolean isOk(int row,int col)
 {    
     
+    StringBuilder word1=new StringBuilder();
+             
+    StringBuilder word2=new StringBuilder();
+
+    
+
+  
+    if(rowIndex[row]!=-1)
+    word1.append(rowword[row].substring(rowIndex[row]+1));
+   else
+    word1.append(rowword[row]);
+    
+   if(colIndex[col]!=-1)
+    word2.append(colword[col].substring(colIndex[col]+1));
+    else
+    word2.append(colword[col]);
+
     
     
-    int choice1=D.searchPrefix(rowword[row]);
     
-    int choice2=D.searchPrefix(colword[col]);
+    int choice1=D.searchPrefix(word1);
+    
+    int choice2=D.searchPrefix(word2);
+
+    if(colIndex[col]!=-1&&rowIndex[row]!=-1)
+    return true;
+
+    
     
      
-    if(row>0&&col>0)
+   /* if(row>0&&col>0)
     {
     if(Board[row-1][col]=='-'&&Board[row][col-1]!='-')
     {
@@ -352,26 +378,37 @@ public class Crossword
     {
         return true;
     }
-        
+        */
     
-}
 
-   if(row==0&&col<line)
+
+   if(row==0&&col<line-1)
     {
         if(choice1==3||choice1==2)
         return true;
     }
-    else if(row<line&&col==0)
+    else if(row<line-1&&col==0)
     {
         if(choice2==3||choice2==2)
         return true;
     
     }
-    else if(row<line&&col<line)
+    else if(row<line-1&&col<line-1)
     {
         if ((choice1==3||choice1==2)&&(choice2==3||choice2==2))
         return true;
     }
+    else if(row==line-1&&col<line-1)
+    {
+        if(choice2==3||choice2==2)
+        return true;
+    }
+    else if(row<line-1&&col==line-1)
+    {
+        if(choice1==3||choice1==2)
+        return true;
+    }
+   
     else if(row==line-1&&col==line-1)
     {
         Print();
@@ -425,7 +462,8 @@ public static boolean isValid(int row, int col,char w)
         word2.append(colword[col]);
            
         word2.append(w);
-       
+
+      
         
         int choice1=D.searchPrefix(word1);
         
@@ -512,6 +550,20 @@ public static void Print()
     }
     
 }
+
+
+ /*public static boolean test(StringBuilder word)
+{
+    /*for(int i =0;i<word.length();i++)
+    {
+        if(word.charAt(i)=='-')
+        return true;
+    }
+    return false;
+}
+    */
+
+
 
 
 }
