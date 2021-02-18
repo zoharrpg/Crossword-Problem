@@ -9,6 +9,9 @@ public class Crossword
     private  static DictInterface D;
     private  static StringBuilder[] rowword;
     private  static StringBuilder[] colword;
+    private static int [] rowIndex;
+    private static int [] colIndex;
+    
     
     private static boolean type=false;
     
@@ -68,6 +71,7 @@ public class Crossword
             }
 
         }
+        testfile.close();
         
        // read the dictionary 
 
@@ -120,14 +124,14 @@ public class Crossword
 
         dictionary.close();
         
+        
 
         
         
           
 
        
-       // print(Board);
-        //read board
+       
 
         rowword=new StringBuilder[line];
         
@@ -142,6 +146,7 @@ public class Crossword
             
             rowword[i]=new StringBuilder();
             colword[i]=new StringBuilder();
+            
 
            
            
@@ -150,10 +155,17 @@ public class Crossword
             
         }
         
+       
         
-        //for(int i=0;i<line;i++)
-       // for(int j=0;j<line;j++)
-        //if((!Character.isUpperCase(Board[i][j])))
+            rowIndex = new int [line];
+            colIndex = new int[line];
+            for(int i=0;i<line;i++)
+            {
+                rowIndex[i]=-1;
+                colIndex[i]=-1;
+            }
+            
+        
             solve(0,0);
 
                        
@@ -184,15 +196,7 @@ public class Crossword
                 rowword[row].append(alphabet[i]);
                 
                 colword[col].append(alphabet[i]);
-                //rowword1[row].append(alphabet[i]);
-               //colword2[col].append(alphabet[i]);
-               
-
-
-                //Board[row][col]=Character.toUpperCase(alphabet[i]);
-
-                
-        
+              
                 if(col<line-1)
                solve(row,col+1);
                else if (row<line)
@@ -206,13 +210,7 @@ public class Crossword
                  if(colword[col].length()!=0)
                 colword[col].deleteCharAt(colword[col].length()-1);
 
-                //if(rowword1[row].length()!=0)
-                //rowword1[row].deleteCharAt(rowword1[row].length()-1);
-                
-            
-                // if(colword2[col].length()!=0)
-                //colword2[col].deleteCharAt(row);
-
+               
                }
 
                
@@ -227,7 +225,7 @@ public class Crossword
 
     
     
-    if(isValid(row,col,Board[row][col]))//&&endpoint)
+    if(isValid(row,col,Board[row][col]))
        { 
        
         
@@ -238,7 +236,7 @@ public class Crossword
 
         
         
-      // Board[row][col]=Character.toUpperCase(Board[row][col]);
+     
              
         
              if(col<line-1)
@@ -249,7 +247,7 @@ public class Crossword
                 
             
                
-          // Board[row][col]=Character.toLowerCase(Board[row][col]);
+          
             
           if(rowword[row].length()!=0)
           rowword[row].deleteCharAt(rowword[row].length()-1);
@@ -257,21 +255,6 @@ public class Crossword
       
            if(colword[col].length()!=0)
           colword[col].deleteCharAt(colword[col].length()-1);
-
-
-
-              
-
-                //if(rowword1[row].length()!=0)
-               // rowword1[row].deleteCharAt(col);
-                
-            
-                // if(colword2[col].length()!=0)
-               // colword2[col].deleteCharAt(row);
-              
-           
-          
-            
         }
 
         
@@ -288,39 +271,18 @@ public class Crossword
     
     if(isOk(row,col))
        { 
-        
-       StringBuilder word1=new StringBuilder();
-        StringBuilder word2 =new StringBuilder();
-        word1.append(rowword[row]);
-        word2.append(colword[col]);
-
-       // for(int i=0;i<word1.length();i++)
-       // {
-           // Board[row][i]=word1.charAt(i)
-        //}
-
-        
-        
-        
-        if(rowword[row].length()!=0)
-        rowword[row].delete(0,rowword[row].length());
-
-       // rowword1[row].append('-');
-        //colword2[col].append('-');
-
        
-               
-               
-            
-            
-        if(colword[col].length()!=0)
-       colword[col].delete(0,colword[col].length());
+        
+       
+        rowword[row].append('-');
+        colword[col].append('-');
+        
+        rowIndex[row]=col;
+        
+        colIndex[col]=row;
 
       
-        
-    
-        
-       
+
        if(col<line-1)
       {
            solve(row,col+1);
@@ -330,14 +292,24 @@ public class Crossword
            solve(row+1,0);
        }
 
-       rowword[row].append(word1);
-       colword[col].append(word2);
        
-       //if(rowword1[row].length()!=0)
-       //rowword1[row].deleteCharAt(col);
+       if(rowword[row].length()!=0)
+          rowword[row].deleteCharAt(rowword[row].length()-1);
+
+      
+        if(colword[col].length()!=0)
+          colword[col].deleteCharAt(colword[col].length()-1);
+
+        rowIndex[row]=-1;
+        
+        colIndex[col]=-1;
+
        
-       //if(colword2[col].length()!=0)
-       //colword2[col].deleteCharAt(row);
+
+       
+
+
+     
 
      
       
@@ -400,6 +372,11 @@ public class Crossword
         if ((choice1==3||choice1==2)&&(choice2==3||choice2==2))
         return true;
     }
+    else if(row==line-1&&col==line-1)
+    {
+        Print();
+        System.exit(0);
+    }
             
          
             return false;
@@ -422,45 +399,41 @@ public static int Case(int row,int col)
 }
 
    
-    
-
-
-
-    
-
-           
-
-
 public static boolean isValid(int row, int col,char w)
     {
-       
-       
-        StringBuilder word1=new StringBuilder();
+       StringBuilder word1=new StringBuilder();
              
         StringBuilder word2=new StringBuilder();
 
+        
+    
+        if(rowIndex[row]!=-1)
+        word1.append(rowword[row].substring(rowIndex[row]+1));
+        else
         word1.append(rowword[row]);
+        
         word1.append(w);
+    
+    
            
        
-       System.out.println("word1 is "+ word1);
+       
 
+       if(colIndex[col]!=-1)
+        word2.append(colword[col].substring(colIndex[col]+1));
+        else
         word2.append(colword[col]);
            
         word2.append(w);
-        System.out.println("word2 is "+ word2);
+       
         
         int choice1=D.searchPrefix(word1);
-        System.out.println("choice1 is "+ choice1);
+        
         
 
         
         int choice2=D.searchPrefix(word2);
-       System.out.println("choice2 is "+ choice2);
-
-        System.out.println("row is "+row+" col is "+col);
-
-      System.out.println("");
+      
 
         
       
@@ -508,37 +481,18 @@ public static boolean isValid(int row, int col,char w)
         if(row==line-1&&col==line-1)
             {
                 
-               // if(Board[row][col]=='-')
-                  //{
-                     
-                    //rowword[row].append(w);
-                
-                    //colword[col].append(w);
-                   // Print();
-                  //  System.exit(0);
-                    
-                    //endpoint=false;
-                     // return true;
-                  //}
+              
                 if((choice1==3||choice1==2)&&(choice2==3||choice2==2))
                 {
                     
                 rowword[row].append(w);
                 
                 colword[col].append(w);
-               // rowword1[row].append(w);
-                //colword2[col].append(w);
+              
                     
                     Print();
                     System.exit(0);
-
-                    
-                    
-                    
-                    //endpoint=false;
-                    //Board[row][col]=Character.toUpperCase(w);
-                    //return true;
-                }
+                 }
                 
 
             }
@@ -546,35 +500,18 @@ public static boolean isValid(int row, int col,char w)
             return false;
 
             
-        
-       
-         
-        
-        
-    
-    }
+}
  
 public static void Print()
+{
+    for(int i=0;i<line;i++)
     {
-       
-        
-        
-       if(!type)
-       {
-           for(int i=0;i<line;i++)
-           {
-               for(int j=0;j<line;j++)
-               {
-                   System.out.print(rowword[i].charAt(j)+" ");
-               }
-
-               System.out.println();
-           }
-
-       }
-
-   
-      
-
+        for(int j=0;j<line;j++)
+    System.out.print(rowword[i].charAt(j)+" ");
+    System.out.println();
+    }
+    
 }
+
+
 }
