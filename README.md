@@ -11,7 +11,22 @@
   
   Filename|Runtime
   --------|-------
-  test3a|
+  test3a| 0.13s
+  test3b| 0.12s
+  test4a| 0.02s
+  test4b| 0.04s
+  test4c| 0.15s
+  test4d| 0.002s
+  test4e| 0.20s
+  test4f| 0.38s
+  test5a| 0.16s
+  test6a|
+  test6b|
+  test6c|
+  test7a|
+  test8a|
+  test8c|
+  
   
   
   
