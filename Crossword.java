@@ -1,27 +1,31 @@
 import java.io.*;
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 
 public class Crossword
 {
-    private  static char[][] Board;
-    private  static char[] alphabet;
-    private  static DictInterface D;
-    private  static StringBuilder[] rowword;
-    private  static StringBuilder[] colword;
-    private static int [] rowIndex;
+    private  static char[][] Board;  
+    private  static char[] alphabet;      // 26 characters
+    private  static DictInterface D;      //dictionary
+    
+    private  static StringBuilder[] rowword; // rows array
+    private  static StringBuilder[] colword;  //column array
+    
+    private static int [] rowIndex;          //array for recording the last index of '-' sign 
     private static int [] colIndex;
-    private static HashMap<Character,Integer> Score;
     
-    
-    private static boolean type=false;
-    
-
    
+   private static HashMap<Character,Integer> Score; //for calualate the Score, and store points.
     
     
-     private static int line;
-     private static int depth=0;
+    private static boolean type=false;         // file type. false for no - sign in the board
+                                               //  true for - sign in the board
+    
+    
+    private static int line;                 //number of the rows and columns
+     
     
 
 
@@ -30,13 +34,14 @@ public class Crossword
     {
         String word;
        
-        String file1= args[0];
+        String file1= args[0];        //Files for dictionary and board
         String file2 = args[1];
-        Scanner dictionary=null;
+       
+        Scanner dictionary=null;       
         Scanner testfile=null;
-        Scanner grade=null;
+        Scanner grade=null;         //Scanner for dictionary board and letter points
 
-      Score=new HashMap<>();
+      Score=new HashMap<>();       //Store letter points
 
         try
         {
@@ -61,8 +66,8 @@ public class Crossword
         }
 
 
-    try
-    {
+      try
+     {
         grade = new Scanner(new FileInputStream("letterpoints.txt"));
         
     }
@@ -73,6 +78,10 @@ public class Crossword
 
     }
 
+    ///  Scan file and use try statment to avoid exceptions
+    //
+
+
     while(grade.hasNext())
     {
         char character=grade.next().charAt(0);
@@ -80,12 +89,14 @@ public class Crossword
 
         Score.put(character,score);
     }
+    // letter points
 
     grade.close();
         
-        line = testfile.nextInt();
+        line = testfile.nextInt(); //get number of rows and columns
         
-        Board =new char [line][line];
+       
+        Board =new char [line][line];   //create a board
 
         for(int i=0; i<line;i++)
         {
@@ -94,19 +105,18 @@ public class Crossword
             {
                 
               
-               Board[i][j]=row.charAt(j);
+               Board[i][j]=row.charAt(j);  //get the Board
 
             }
 
         }
         testfile.close();
         
-       // read the dictionary 
-
-       alphabet=new char[26];
+       
+       alphabet=new char[26]; // get 26 characters
 
        for(int i=0;i<26;i++)
-       alphabet[i]=(char)(97+i);
+       alphabet[i]=(char)(97+i);// get 26 characters  
        //get 26 character;
 
        
@@ -117,16 +127,12 @@ public class Crossword
             {
                 if(Board[i][j]=='-')
                 {
-                type=true;
+                type=true;           //// get the type of the Board, 
+                                        //whether there is a negative sign in the Board or not
                 break;
                 }
-                
-                
-              
-              
-            }
-
         }
+    }
 
 
        
@@ -139,16 +145,18 @@ public class Crossword
             word=dictionary.nextLine();
             if(type)
             {
-                if(word.length()<=line)
+                if(word.length()<=line)      // if there is a negative sign in the board 
+                                             // add word that less or equal to number of lines
                 D.add(word);
             }
             else
             {
-                if(word.length()==line)
+                if(word.length()==line)       //if there no negative sign in the board
+                                             // add words that equal to the number of lines 
                 D.add(word);
 
             }
-        }//  input the dictionary, which makes D is the dictionary 
+        }//  get the dictionary
 
         dictionary.close();
 
@@ -162,9 +170,9 @@ public class Crossword
        
        
 
-        rowword=new StringBuilder[line];
+        rowword=new StringBuilder[line];      // row words array
         
-        colword=new StringBuilder[line];
+        colword=new StringBuilder[line];      // colmun words array
         
         
       
@@ -173,35 +181,33 @@ public class Crossword
         for(int i=0;i<line;i++)
         {
             
-            rowword[i]=new StringBuilder();
+            rowword[i]=new StringBuilder();     //initialize rows and colmuns
             colword[i]=new StringBuilder();
-            
-
-           
-           
-
-            
-            
         }
         
        
         
-            rowIndex = new int [line];
+            rowIndex = new int [line];        //intitialize last index
             colIndex = new int[line];
+            
+            
+            
+            
             for(int i=0;i<line;i++)
             {
-                rowIndex[i]=-1;
+                rowIndex[i]=-1;           // Set intial value for no negative sign;
                 colIndex[i]=-1;
             }
             
         
-            solve(0,0);
+            
+            solve(0,0);              // recursive method to solve the Crossword puzzle.
 
                        
 
                    
         
-       System.out.println("No solution!");
+       System.out.println("No solution!");   // There is no solution in the Board
        
 
     }
@@ -214,26 +220,27 @@ public class Crossword
     
   
       
-    switch(Case(row,col))
+    switch(Case(row,col)) // Determin case for + and character, -
     {
-    case 0:
-    for(int i=0;i<26;i++)
+    case 0:             // + case
+    for(int i=0;i<26;i++)     // For each character 
     {
           
-        if(isValid(row,col,alphabet[i]))
+        if(isValid(row,col,alphabet[i]))    // Determin whether is valid
             {
-                rowword[row].append(alphabet[i]);
-                
-                colword[col].append(alphabet[i]);
+                rowword[row].append(alphabet[i]);      
+                                                    
+                colword[col].append(alphabet[i]);      // add character
               
+                
                 if(col<line-1)
-               solve(row,col+1);
+               solve(row,col+1);            // Next square
                else if (row<line)
                 solve(row+1,0);
 
-                depth++;
+                
                 if(rowword[row].length()!=0)
-                rowword[row].deleteCharAt(rowword[row].length()-1);
+                rowword[row].deleteCharAt(rowword[row].length()-1);    //delete a character for backtracking
 
             
                  if(colword[col].length()!=0)
@@ -249,19 +256,19 @@ public class Crossword
              
 
 
-    case 1:
+    case 1:  // small character case
     
 
     
     
-    if(isValid(row,col,Board[row][col]))
+    if(isValid(row,col,Board[row][col]))    // test whether it is valid
        { 
        
         
         
-        rowword[row].append(Board[row][col]);
+        rowword[row].append(Board[row][col]);   
                 
-        colword[col].append(Board[row][col]);
+        colword[col].append(Board[row][col]); // add character
 
         
         
@@ -270,8 +277,8 @@ public class Crossword
         
              if(col<line-1)
                solve(row,col+1);
-            else if(row<line)
-            solve(row+1,0);
+            else if(row<line-1)
+            solve(row+1,0);                  // next character
                 
                 
             
@@ -279,7 +286,7 @@ public class Crossword
           
             
           if(rowword[row].length()!=0)
-          rowword[row].deleteCharAt(rowword[row].length()-1);
+          rowword[row].deleteCharAt(rowword[row].length()-1); //delete character
 
       
            if(colword[col].length()!=0)
@@ -296,22 +303,22 @@ public class Crossword
                 
         
 
-    case 2:
+    case 2:            //for negative sign
     
-    if(isOk(row,col))
+    if(isOk(row,col))     //test whether it is valid
        { 
        
         
        
-        rowword[row].append('-');
+        rowword[row].append('-');      // add negative sign to the board
         colword[col].append('-');
 
         int prerow=rowIndex[row];
-        int precol=colIndex[col];
+        int precol=colIndex[col];      //previous row last index of a negative sign 
         
         rowIndex[row]=col;
         
-        colIndex[col]=row;
+        colIndex[col]=row;              // update the last index of a negative
 
       
 
@@ -319,20 +326,20 @@ public class Crossword
       {
            solve(row,col+1);
       }
-       else if(row<line)
-       {
+       else if(row<line-1)
+       {                            //next character
            solve(row+1,0);
        }
 
        
        if(rowword[row].length()!=0)
-          rowword[row].deleteCharAt(rowword[row].length()-1);
+          rowword[row].deleteCharAt(rowword[row].length()-1);   //delete character
 
       
         if(colword[col].length()!=0)
           colword[col].deleteCharAt(colword[col].length()-1);
-
-        rowIndex[row]=prerow;
+ 
+        rowIndex[row]=prerow;       //back to previous last index
         
         colIndex[col]=precol;
 
@@ -357,8 +364,18 @@ public class Crossword
 
 
 
-    public static boolean isOk(int row,int col)
+public static boolean isOk(int row,int col)     //test whether the negative is valid.
 {    
+    
+    if(row==0&&col==0)//if the negative sign is on the first square
+     {
+         return true; 
+     }
+    
+    if(colIndex[col]!=-1&&rowIndex[row]!=-1) //if the negative signs next to the square
+              return true;                   // return true
+    
+    
     
     StringBuilder word1=new StringBuilder();
              
@@ -367,13 +384,13 @@ public class Crossword
     
 
   
-    if(rowIndex[row]!=-1)
-    word1.append(rowword[row].substring(rowIndex[row]+1));
+    if(rowIndex[row]!=-1)       //test whether there is a negative sign in row
+    word1.append(rowword[row].substring(rowIndex[row]+1));    //get the substring
    else
-    word1.append(rowword[row]);
+    word1.append(rowword[row]); 
     
-   if(colIndex[col]!=-1)
-    word2.append(colword[col].substring(colIndex[col]+1));
+   if(colIndex[col]!=-1)        
+    word2.append(colword[col].substring(colIndex[col]+1));  // //test whether there is a negative sign in column
     else
     word2.append(colword[col]);
 
@@ -382,70 +399,42 @@ public class Crossword
     
     int choice1=D.searchPrefix(word1);
     
-    int choice2=D.searchPrefix(word2);
-
-    if(colIndex[col]!=-1&&rowIndex[row]!=-1)
-    return true;
+    int choice2=D.searchPrefix(word2);                  //get the number that show whther is a prefix or 
 
     
+
     
      
-   /* if(row>0&&col>0)
-    {
-    if(Board[row-1][col]=='-'&&Board[row][col-1]!='-')
+     
+     if(row==0&&col<line)                        // if the negative sign is on the first row
     {
         if(choice1==3||choice1==2)
-        return true;    
-    }
-    else if(Board[row][col-1]=='-'&&Board[row+1][col]!='-')
-    {
-        if(choice2==3||choice2==2)
-        return true;
-
-    }
-    else if(Board[row][col-1]=='-'&&Board[row+1][col]=='-')
-    {
         return true;
     }
-        */
     
-
-
-   if(row==0&&col<line-1)
-    {
-        if(choice1==3||choice1==2)
-        return true;
-    }
-    else if(row<line-1&&col==0)
+    if(row<line&&col==0)                      //if the negative sign is on the  first column
     {
         if(choice2==3||choice2==2)
         return true;
     
-    }
-    else if(row<line-1&&col<line-1)
-    {
-        if ((choice1==3||choice1==2)&&(choice2==3||choice2==2))
-        return true;
-    }
-    else if(row==line-1&&col<line-1)
-    {
-        if(choice2==3||choice2==2)
-        return true;
-    }
-    else if(row<line-1&&col==line-1)
-    {
-        if(choice1==3||choice1==2)
-        return true;
     }
    
-    else if(row==line-1&&col==line-1)
+    if(row<line-1&&col<line-1)               // if the negative sign is on the last row or last column
     {
+        if ((choice1==3||choice1==2)&&(choice2==3||choice2==2))   ///and center of the board
+        return true;
+    }
+    
+    if(row==line-1&&col==line-1)    //if the negative sign is on the last square
+    {
+        rowword[row].append('-');
+        colword[col].append('-');
+        
         Print();
         System.exit(0);
     }
             
-         
-            return false;
+    return false;
 
     
 
@@ -453,30 +442,30 @@ public class Crossword
 
 
     
-public static int Case(int row,int col)
+public static int Case(int row,int col)    //identify which case + - and character
 {
-    
-    if(Board[row][col]=='-')
-       return 2;
-    else if(Character.isLowerCase(Board[row][col]))
-    return 1;
-    else
+    if(Board[row][col]=='+')  
     return 0;
+    else if(Board[row][col]=='-')
+    return 2;
+    else
+    return 1;
+    
 }
 
    
-public static boolean isValid(int row, int col,char w)
+public static boolean isValid(int row, int col,char w)   //test + sign and character 
     {
        StringBuilder word1=new StringBuilder();
              
-        StringBuilder word2=new StringBuilder();
+       StringBuilder word2=new StringBuilder();        
 
         
     
         if(rowIndex[row]!=-1)
         word1.append(rowword[row].substring(rowIndex[row]+1));
         else
-        word1.append(rowword[row]);
+        word1.append(rowword[row]);                               //append character
         
         word1.append(w);
     
@@ -492,9 +481,11 @@ public static boolean isValid(int row, int col,char w)
            
         word2.append(w);
 
+        
+
       
         
-        int choice1=D.searchPrefix(word1);
+        int choice1=D.searchPrefix(word1);            //get the result of search 
         
         
 
@@ -502,9 +493,10 @@ public static boolean isValid(int row, int col,char w)
         int choice2=D.searchPrefix(word2);
       
 
+       
         
       
-      if(row<line-1 && col<line-1)
+      if(row<line-1 && col<line-1)          //if the position is not the last row or col
         {
            
            
@@ -516,10 +508,10 @@ public static boolean isValid(int row, int col,char w)
             
         }
 
-        if(row<line-1&&col==line-1)
+        if(row<line-1&&col==line-1)     //if the position is on the last col
         {
             
-            if((choice1==3||choice1==2)&&(choice2==3||choice2==1))
+            if((choice1==3||choice1==2)&&(choice2==3||choice2==1)) 
             {
                 return true;
 
@@ -528,9 +520,7 @@ public static boolean isValid(int row, int col,char w)
             
             
         }
-
-         
-        if(row==line-1&&col<line-1)
+        if(row==line-1&&col<line-1)    // if the position is on the last row
         {
             
             
@@ -545,7 +535,7 @@ public static boolean isValid(int row, int col,char w)
             
         }
 
-        if(row==line-1&&col==line-1)
+        if(row==line-1&&col==line-1)    // if the position is on the last square
             {
                 
               
@@ -569,7 +559,7 @@ public static boolean isValid(int row, int col,char w)
             
 }
  
-public static void Print()
+public static void Print()   // Print result
 {
     for(int i=0;i<line;i++)
     {
@@ -585,7 +575,7 @@ public static void Print()
     
 }
 
-public static int getPoints()
+public static int getPoints()    // get letter points 
 {
     int score=0;
     for(int i=0;i<line;i++)
@@ -600,20 +590,6 @@ public static int getPoints()
 
     return score;
 }
-
-
- /*public static boolean test(StringBuilder word)
-{
-    /*for(int i =0;i<word.length();i++)
-    {
-        if(word.charAt(i)=='-')
-        return true;
-    }
-    return false;
-}
-    */
-
-
 
 
 }
