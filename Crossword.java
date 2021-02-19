@@ -11,6 +11,7 @@ public class Crossword
     private  static StringBuilder[] colword;
     private static int [] rowIndex;
     private static int [] colIndex;
+    private static HashMap<Character,Integer> Score;
     
     
     private static boolean type=false;
@@ -33,6 +34,9 @@ public class Crossword
         String file2 = args[1];
         Scanner dictionary=null;
         Scanner testfile=null;
+        Scanner grade=null;
+
+      Score=new HashMap<>();
 
         try
         {
@@ -55,6 +59,30 @@ public class Crossword
             System.out.println("Board does noe exist.Try another file");
             System.exit(0);
         }
+
+
+    try
+    {
+        grade = new Scanner(new FileInputStream("letterpoints.txt"));
+        
+    }
+    catch(Exception e)
+    {
+        System.out.println("Score file does not exist");
+            System.exit(0);
+
+    }
+
+    while(grade.hasNext())
+    {
+        char character=grade.next().charAt(0);
+        int score=grade.nextInt();
+
+        Score.put(character,score);
+    }
+
+    grade.close();
+        
         line = testfile.nextInt();
         
         Board =new char [line][line];
@@ -123,6 +151,7 @@ public class Crossword
         }//  input the dictionary, which makes D is the dictionary 
 
         dictionary.close();
+
         
         
 
@@ -546,9 +575,30 @@ public static void Print()
     {
         for(int j=0;j<line;j++)
     System.out.print(rowword[i].charAt(j)+" ");
+    
     System.out.println();
     }
+
+    int score=getPoints();
+
+    System.out.println("Score: "+score);
     
+}
+
+public static int getPoints()
+{
+    int score=0;
+    for(int i=0;i<line;i++)
+    {
+        for(int j=0;j<line;j++)
+        {
+            if(rowword[i].charAt(j)!='-')
+            score+=Score.get(Character.toUpperCase(rowword[i].charAt(j)));
+            
+        }
+    }
+
+    return score;
 }
 
 
