@@ -146,14 +146,16 @@ public class Crossword
             if(type)
             {
                 if(word.length()<=line)      // if there is a negative sign in the board 
-                                             // add word that less or equal to number of lines
+                {                             // add word that less or equal to number of lines
                 D.add(word);
+                }    
             }
             else
             {
                 if(word.length()==line)       //if there no negative sign in the board
-                                             // add words that equal to the number of lines 
+                {                            // add words that equal to the number of lines 
                 D.add(word);
+                }
 
             }
         }//  get the dictionary
