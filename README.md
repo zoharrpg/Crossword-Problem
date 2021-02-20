@@ -11,7 +11,30 @@
   
   Filename|Runtime
   --------|-------
-  test3a|
+
+  test3a| 0.13s
+  test3b| 0.12s
+  test4a| 0.02s
+  test4b| 0.04s
+  test4c| 0.15s
+  test4d| 0.002s
+  test4e| 0.20s
+  test4f| 0.38s
+  test5a| 0.16s
+  test6a| >30min
+  test6b| 1009s
+  test6c| >2h
+  test7a|>2h
+  test8a|>2h
+  test8b|>2h
+  test8c|>= 10min
+  
+  ## Asymptotic Analysis
+  
+  Theta
+  
+  
+
   
   
   
