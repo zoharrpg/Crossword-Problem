@@ -15,6 +15,7 @@ public class Crossword
     
     private static int [] rowIndex;          //array for recording the last index of '-' sign 
     private static int [] colIndex;
+               
     
    
    private static HashMap<Character,Integer> Score; //for calualate the Score, and store points.
@@ -205,11 +206,18 @@ public class Crossword
             
             solve(0,0);              // recursive method to solve the Crossword puzzle.
 
-                       
 
-                   
-        
-       System.out.println("No solution!");   // There is no solution in the Board
+            
+
+        System.out.println("No solution!");   // There is no solution in the Board
+
+
+      /*  double finish = System.nanoTime();
+        double delta=((finish-start)/1000000000);
+        System.out.println("Time running the alogorithm : "+ (delta)+"s");      //caluate time
+        */
+
+
        
 
     }
@@ -547,11 +555,19 @@ public static boolean isValid(int row, int col,char w)   //test + sign and chara
                 rowword[row].append(w);
                 
                 colword[col].append(w);
-              
+
+                
+                 Print();
+
+
+              /*  double finish = System.nanoTime();
+                double delta= finish-start;
+                System.out.println("Time running the alogorithm : "+ (delta/1000000000)+"s");
+                */
                     
-                    Print();
-                    System.exit(0);
-                 }
+                System.exit(0);
+                 
+            }
                 
 
             }
