@@ -11,7 +11,6 @@
   
   Filename|Runtime
   --------|-------
-
   test3a| 0.13s
   test3b| 0.12s
   test4a| 0.02s
