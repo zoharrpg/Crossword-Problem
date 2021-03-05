@@ -29,9 +29,11 @@
   test8c|>= 10min
   
   ## Asymptotic Analysis
-  
-  Theta
-  
+ The runtime is exponential
+
+Number of crossword locations in the puzzle = K Number of possible letters in a crossword location= 26 Number of words in the dictionary = N Number of characters in a word = M
+
+Worst-Case runtime = branching factor^height * runtime of nonrecursive part = 26^(K)* (MN)
   
 
   
